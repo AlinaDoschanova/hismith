@@ -1,0 +1,15 @@
+$transition-time:             0.3s !default;
+
+.progress {
+
+  width: 100%;
+  height: 6px;
+  background-color: $second-color-lightest;
+
+  &__bar {
+    max-width: 50%;
+    transition: width $transition-time;
+    background-image: radial-gradient(circle at 50% 50%, $second-color-dark, $second-color-light);
+  }
+
+}
