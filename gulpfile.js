@@ -26,13 +26,11 @@ const pngquant = require('imagemin-pngquant');
 const uglify = require('gulp-uglify');
 const concat = require('gulp-concat');
 const cheerio = require('gulp-cheerio');
-const svgstore = require('gulp-svgstore');
 const svgmin = require('gulp-svgmin');
 const base64 = require('gulp-base64');
 const notify = require('gulp-notify');
 const plumber = require('gulp-plumber');
 const cleanCSS = require('gulp-cleancss');
-const spritesmith = require('gulp.spritesmith');
 const buffer = require('vinyl-buffer');
 const merge = require('merge-stream');
 const wait = require('gulp-wait');
@@ -139,59 +137,6 @@ gulp.task('img:opt', function (callback) {
   }
 });
 
-// Сборка SVG-спрайта
-let spriteSvgPath = dirs.source + '/blocks/sprite-svg/svg/';
-gulp.task('sprite:svg', function (callback) {
-  if(fileExist(spriteSvgPath) !== false) {
-    return gulp.src(spriteSvgPath + '*.svg')
-      .pipe(svgmin(function (file) {
-        return {
-          plugins: [{
-            cleanupIDs: {
-              minify: true
-            }
-          }]
-        }
-      }))
-      .pipe(svgstore({ inlineSvg: true }))
-      .pipe(cheerio({
-        run: function($) {
-          $('svg').attr('style',  'display:none');
-        },
-        parserOptions: {
-          xmlMode: true
-        }
-      }))
-      .pipe(rename('sprite-svg.svg'))
-      .pipe(gulp.dest(dirs.source + '/blocks/sprite-svg/img/'));
-  }
-  else {
-    console.log('SVG-спрайт: нет папки ' + spriteSvgPath);
-    callback();
-  }
-});
-
-// Сборка PNG-спрайта
-let spritePngPath = dirs.source + '/blocks/sprite-png/png/';
-gulp.task('sprite:png', function () {
-  let fileName = 'sprite-' + Math.random().toString().replace(/[^0-9]/g, '') + '.png';
-  let spriteData = gulp.src(spritePngPath + '*.png')
-    .pipe(plumber({ errorHandler: onError }))
-    .pipe(spritesmith({
-      imgName: fileName,
-      cssName: 'sprite-png.scss',
-      padding: 4,
-      imgPath: '../img/' + fileName
-    }));
-  let imgStream = spriteData.img
-    .pipe(buffer())
-    .pipe(imagemin())
-    .pipe(gulp.dest(dirs.source + '/blocks/sprite-png/img/'));
-  let cssStream = spriteData.css
-    .pipe(gulp.dest(dirs.source + '/blocks/sprite-png/'));
-  return merge(imgStream, cssStream);
-});
-
 // Очистка перед сборкой
 gulp.task('clean', function () {
   return del([
@@ -220,7 +165,6 @@ gulp.task('js', function () {
 gulp.task('build', function (callback) {
   gulpSequence(
     'clean',
-    ['sprite:svg', 'sprite:png'],
     ['style', 'js', 'copy:img', 'copy:fonts'],
     'html',
     callback
@@ -254,10 +198,6 @@ gulp.task('serve', ['build'], function() {
   }
   // Слежение за шрифтами
   gulp.watch(dirs.source + '/fonts/*.{ttf,woff,woff2,eot,svg}', ['watch:fonts']);
-  // Слежение за SVG (спрайты)
-  gulp.watch('*.svg', {cwd: spriteSvgPath}, ['watch:sprite:svg']);
-  // Слежение за PNG (спрайты)
-  gulp.watch(spritePngPath + '*.png', {cwd: spritePngPath}, ['watch:sprite:png']);
   // Слежение за JS
   if(jsList.length) {
     gulp.watch(jsList, ['watch:js']);
@@ -268,8 +208,6 @@ gulp.task('serve', ['build'], function() {
 gulp.task('watch:html', ['html'], reload);
 gulp.task('watch:img', ['copy:img'], reload);
 gulp.task('watch:fonts', ['copy:fonts'], reload);
-gulp.task('watch:sprite:svg', ['sprite:svg'], reload);
-gulp.task('watch:sprite:png', ['sprite:png'], reload);
 gulp.task('watch:js', ['js'], reload);
 
 // Отправка в GH pages (ветку gh-pages репозитория)
