@@ -1,37 +1,56 @@
 .slider {
 
-  background-image: radial-gradient(circle at 50% 50%, #fff, $main-color);
+  &__item-diagram {
+    padding: 5px;
+    min-height: 270px;
+    max-width: 500px;
+    margin: auto;
 
-  @media screen-lg {
-    min-height: 530px;
-  }
-
-  &__inner {
-    margin-right: 69px;
-    margin-left: 69px;
-    margin-bottom: 70px;
-
-    @media screen-sm {
-      margin-right: 77px;
-      margin-left: 77px;
-    }
-
-    @media screen-lg {
-      margin-right: 140px;
-      margin-left: 140px;
+    @media (min-width: $screen-xs) {
+      width: 500px;
     }
   }
 
-  svg {
+  .owl-prev,
+  .owl-next {
+    display: none;
+    position: absolute;
+    height: 200px;
+    width: 41px;
+    top: 50%;
+    transform: translateY(-50%);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='41' height='200' viewBox='0 0 41 200'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath fill='%232B4989' d='M0 0h41v200H0z' opacity='.096'/%3E%3Cpath fill='%23FFF' fill-rule='nonzero' d='M29.55 100.55c0-.537-.205-1.075-.615-1.485l-12.9-12.9a2.1 2.1 0 1 0-2.97 2.972l11.414 11.413-11.414 11.414a2.1 2.1 0 0 0 2.971 2.97l12.9-12.898c.41-.41.614-.948.614-1.486z'/%3E%3C/g%3E%3C/svg%3E%0A");
     background-repeat: no-repeat;
+    font: 0/0 a;
+    color: transparent;
+
+    @media (min-width: $screen-xs) {
+      display: block;
+    }
   }
 
-  &__prev {
-    transform: rotate(180deg);
+  .owl-prev {
+    left: 28px;
+    transform: rotate(180deg) translateY(50%);
+
+    @media (min-width: $screen-sm) {
+      left: 36px;
+    }
+
+    @media (min-width: $screen-lg) {
+      left: 100px;
+    }
   }
 
-  &__next {
+  .owl-next {
+    right: 28px;
 
+    @media (min-width: $screen-sm) {
+      right: 36px;
+    }
+
+    @media (min-width: $screen-lg) {
+      right: 100px;
+    }
   }
 }
