@@ -1,7 +1,8 @@
 $transition-time:             0.3s !default;
 
 .progress {
-
+  position: fixed;
+  bottom: 0;
   width: 100%;
   height: 6px;
   background-color: $second-color-lightest;
