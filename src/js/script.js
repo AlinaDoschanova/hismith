@@ -16,34 +16,34 @@ var barChartData = {
     labels: ["2016", "2017", "2018"],
     datasets: [{
         label: 'Dataset 1',
-        backgroundColor: 'red',
+        backgroundColor: '#2b4989',
         data: [
-            20,
-            30,
-            50,
+            10,
+            18,
+            25,
         ]
     }, {
         label: 'Dataset 2',
-        backgroundColor: 'blue',
+        backgroundColor: '#405e9e',
         data: [
-            30,
-            30,
-            30,
+            60,
+            55,
+            50,
         ]
     }, {
         label: 'Dataset 3',
-        backgroundColor: 'green',
+        backgroundColor: '#617fbd',
         data: [
-            50,
-            40,
-            20,
+            30,
+            27,
+            25,
         ]
     }]
 
 };
 
 var horizontalBarChartData = {
-            labels: ["January", "February", "March"],
+            labels: [1, 2, 3, 4, 5, 6, 7, 8],
             datasets: [{
                 label: 'Dataset 1',
                 backgroundColor: '#ff0',
