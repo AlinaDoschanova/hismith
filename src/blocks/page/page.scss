@@ -37,8 +37,8 @@ body {
   font-family: $font-family;
   font-size: $font-size;
   line-height: $line-height;
-  background-color: $main-color;
-  background-image: radial-gradient(circle at 50% 50%, #fff, $main-color);
+  background-color: $bg-color;
+  background-image: radial-gradient(circle at 50% 50%, #fff, $bg-color);
   color: $text-color;
 }
 

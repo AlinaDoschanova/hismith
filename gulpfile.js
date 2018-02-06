@@ -62,6 +62,7 @@ let jsList = [
   './node_modules/owl.carousel/dist/owl.carousel.min.js',
   './node_modules/svg4everybody/dist/svg4everybody.js',
   './node_modules/object-fit-images/dist/ofi.js',
+  './node_modules/chart.js/dist/Chart.bundle.min.js',
   dirs.source + '/js/script.js',
 ];
 
@@ -152,7 +153,7 @@ gulp.task('js', function () {
     return gulp.src(jsList)
       .pipe(plumber({ errorHandler: onError }))             // не останавливаем автоматику при ошибках
       .pipe(concat('script.min.js'))                        // конкатенируем все файлы в один с указанным именем
-      .pipe(uglify())                                       // сжимаем
+      // .pipe(uglify())                                       // сжимаем
       .pipe(gulp.dest(dirs.build + '/js'));                 // записываем
   }
   else {
