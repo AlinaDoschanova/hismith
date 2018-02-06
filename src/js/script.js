@@ -46,7 +46,7 @@ var horizontalBarChartData = {
             labels: [1, 2, 3, 4, 5, 6, 7, 8],
             datasets: [{
                 label: 'Dataset 1',
-                backgroundColor: '#ff0',
+                backgroundColor: '#2b4989',
                 // borderColor: window.chartColors.red,
                 // borderWidth: 1,
                 data: [
