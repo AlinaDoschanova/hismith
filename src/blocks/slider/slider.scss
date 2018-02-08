@@ -11,7 +11,13 @@
     @media (min-width: $screen-xs) {
       width: 500px;
     }
+
+    &--twins {
+      display: flex;
+    }
   }
+
+  &__diagram {}
 
   .owl-prev,
   .owl-next {

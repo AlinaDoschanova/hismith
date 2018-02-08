@@ -11,6 +11,55 @@ $(document).ready(function(){
 
 });
 
+// Define a plugin to provide data labels
+Chart.plugins.register({
+    afterDatasetsDraw: function(chart, easing) {
+        // To only draw at the end of animation, check for easing === 1
+        var ctx = chart.ctx;
+
+        var numColor, positionYCorrect, positionXCorrect;
+
+        if(chart.canvas.id == 'Chart01') {
+          numColor = '#fff';
+          positionYCorrect = 15;
+          positionXCorrect = 0;
+        }
+        else {
+          numColor = '#000';
+          positionYCorrect = 0;
+          positionXCorrect = 10;
+        }
+
+        chart.data.datasets.forEach(function (dataset, i) {
+            var meta = chart.getDatasetMeta(i);
+            if (!meta.hidden) {
+                meta.data.forEach(function(element, index) {
+                    // Draw the text in black, with the specified font
+                    ctx.fillStyle = numColor;
+
+                    var fontSize = 16;
+                    var fontStyle = 'normal';
+                    var fontFamily = 'Helvetica Neue';
+                    ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                    // Just naively convert to string for now
+                    var dataString = dataset.data[index].toString();
+                    if(dataset.data[index] < 0) {
+                      positionXCorrect * -1;
+                    }
+
+                    // Make sure alignment settings are correct
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+
+                    var padding = 5;
+                    var position = element.tooltipPosition();
+                    ctx.fillText(dataString, position.x + positionXCorrect, position.y + positionYCorrect);
+                });
+            }
+        });
+    }
+});
 
 var barChartData = {
     labels: ["2016", "2017", "2018"],
@@ -42,24 +91,47 @@ var barChartData = {
 
 };
 
-var horizontalBarChartData = {
-            labels: [1, 2, 3, 4, 5, 6, 7, 8],
-            datasets: [{
-                label: 'Dataset 1',
-                backgroundColor: '#2b4989',
-                // borderColor: window.chartColors.red,
-                // borderWidth: 1,
-                data: [
-                    10,
-                    -5,
-                    2,
-                ]
-            },
-            ]
+var horizontalBarChartData1 = {
+    labels: [1, 2, 3, 4, 5, 6, 7, 8],
+    datasets: [{
+        label: 'Dataset 1',
+        backgroundColor: '#ff0',
+        data: [
+            10,
+            -5,
+            2,
+            1,
+            3,
+            -1,
+            -2,
+            0.8
+        ]
+    },
+    ]
+};
+>>>>>>> 5b98c335f5936fbe93ad21811f63b9123fcd6965
 
-        };
+var horizontalBarChartData2 = {
+    labels: [1, 2, 3, 4, 5, 6, 7, 8],
+    datasets: [{
+        label: 'Dataset 1',
+        backgroundColor: '#ff0',
+        data: [
+            8,
+            -3,
+            6,
+            1,
+            3,
+            -1,
+            -2,
+            0.8
+        ]
+    },
+    ]
+};
 
 window.onload = function() {
+
     var ctx = document.getElementById("Chart01");
     window.myBar = new Chart(ctx, {
         type: 'bar',
@@ -72,14 +144,9 @@ window.onload = function() {
                 display:false,
             },
             tooltips: {
-                mode: 'index',
                 enabled: false
             },
-            responsive: true,
-            gridLines: {
-                display: false,
-                drawBorder: false
-            },
+            responsive: false,
             scales: {
                 xAxes: [{
                     stacked: true,
@@ -101,62 +168,100 @@ window.onload = function() {
     });
 
     var cty = document.getElementById("Chart02");
-    window.myHorizontalBar = new Chart(ctx, {
-                    type: 'horizontalBar',
-                    data: horizontalBarChartData,
-                    options: {
-                        // Elements options apply to all of the options unless overridden in a dataset
-                        // In this case, we are setting the border of each horizontal bar to be 2px wide
-                        elements: {
-                            rectangle: {
-                                borderWidth: 2,
-                            }
-                        },
-                        responsive: true,
-                        legend: {
-                            display: false,
-                        },
-                        title: {
-                            display: false,
-                            text: 'Chart.js Horizontal Bar Chart'
+    window.myHorizontalBar = new Chart(cty, {
+        type: 'horizontalBar',
+        data: horizontalBarChartData1,
+        options: {
+            elements: {
+                rectangle: {
+                    borderWidth: 2,
+                }
+            },
+            responsive: false,
+            tooltips: {
+                enabled: false
+            },
+            legend: {
+                display: false,
+            },
+            title: {
+                display: false,
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: false,
+                        drawBorder: false,
+                        // drawOnChartArea: false,
+                    },
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '';
                         }
                     }
-                });
+                }],
+                yAxes: [{
+                    gridLines: {
+                        display: false,
+                        drawBorder: false,
+                        // drawOnChartArea: false,
+                    },
+                    // ticks: {
+                    //     callback: function(value, index, values) {
+                    //         return '';
+                    //     }
+                    // }
+                }],
+            }
+        }
+    });
 
-    // var myChart = new Chart(ctx, {
-    //     type: 'bar',
-    //     data: {
-    //         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    //         datasets: [{
-    //             label: '# of Votes',
-    //             data: [12, 19, 3, 5, 2, 3],
-    //             backgroundColor: [
-    //                 'rgba(255, 99, 132, 0.2)',
-    //                 'rgba(54, 162, 235, 0.2)',
-    //                 'rgba(255, 206, 86, 0.2)',
-    //                 'rgba(75, 192, 192, 0.2)',
-    //                 'rgba(153, 102, 255, 0.2)',
-    //                 'rgba(255, 159, 64, 0.2)'
-    //             ],
-    //             borderColor: [
-    //                 'rgba(255,99,132,1)',
-    //                 'rgba(54, 162, 235, 1)',
-    //                 'rgba(255, 206, 86, 1)',
-    //                 'rgba(75, 192, 192, 1)',
-    //                 'rgba(153, 102, 255, 1)',
-    //                 'rgba(255, 159, 64, 1)'
-    //             ],
-    //             borderWidth: 1
-    //         }]
-    //     },
-    //     options: {
-    //         scales: {
-    //             yAxes: [{
-    //                 ticks: {
-    //                     beginAtZero:true
-    //                 }
-    //             }]
-    //         }
-    //     }
-    // });
+    var ctz = document.getElementById("Chart03");
+    window.myHorizontalBar = new Chart(ctz, {
+        type: 'horizontalBar',
+        data: horizontalBarChartData2,
+        options: {
+            elements: {
+                rectangle: {
+                    borderWidth: 2,
+                }
+            },
+            responsive: false,
+            tooltips: {
+                enabled: false
+            },
+            legend: {
+                display: false,
+            },
+            title: {
+                display: false,
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: false,
+                        drawBorder: false,
+                        // drawOnChartArea: false,
+                    },
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '';
+                        }
+                    }
+                }],
+                yAxes: [{
+                    gridLines: {
+                        display: false,
+                        drawBorder: false,
+                        // drawOnChartArea: false,
+                    },
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '';
+                        }
+                    }
+                }],
+            }
+        }
+    });
 };
